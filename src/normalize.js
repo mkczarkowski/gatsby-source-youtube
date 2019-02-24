@@ -44,7 +44,8 @@ exports.normalizeRecords = items => {
             )
           )
         )
-      )
+      ),
+      mqThumbnail: get(item, "snippet.thumbnails.medium")
     };
 
     return e;
