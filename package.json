@@ -1,6 +1,6 @@
 {
     "name": "gatsby-source-youtube",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "description": "Gatsby source to fetch data from Youtube API",
     "repository": "https://github.com/jworley/gatsby-source-youtube",
     "main": "index.js",

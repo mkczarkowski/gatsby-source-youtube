@@ -31,41 +31,30 @@ function getApi() {
 
 exports.sourceNodes = async (
   { boundActionCreators, store, cache, createNodeId },
-  { channelId, apiKey, maxVideos=50 }
+  { playlistId, apiKey, maxVideos=50 }
 ) => {
   const { createNode } = boundActionCreators;
 
-  const createVideoNodesFromChannelId = async (channelId, apiKey) => {
+  const createVideoNodesFromPlaylistId = async (playlistId, apiKey) => {
     var api = getApi();
     let videos = [];
 
-    const channelResp = await api.get(
-      `channels?part=contentDetails&id=${channelId}&key=${apiKey}`
+    let pageSize = Math.min(50, maxVideos);
+
+    let videoResp = await api.get(
+      `playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=${pageSize}&playlistId=${playlistId}&key=${apiKey}`
     );
+    videos.push(...videoResp.data.items);
 
-    const channelData = channelResp.data.items[0];
-    if (!!channelData) {
-      const uploadsId = get(
-        channelData,
-        "contentDetails.relatedPlaylists.uploads"
-      );
-      let pageSize = Math.min(50, maxVideos);
-
-      let videoResp = await api.get(
-        `playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=${pageSize}&playlistId=${uploadsId}&key=${apiKey}`
+    while (videoResp.data.nextPageToken && videos.length < maxVideos) {
+      pageSize = Math.min(50, maxVideos - videos.length);
+      let nextPageToken = videoResp.data.nextPageToken;
+      videoResp = await api.get(
+        `playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=${pageSize}&pageToken=${nextPageToken}&playlistId=${playlistId}&key=${apiKey}`
       );
       videos.push(...videoResp.data.items);
-
-      while (videoResp.data.nextPageToken && videos.length < maxVideos) {
-        pageSize = Math.min(50, maxVideos - videos.length);
-        let nextPageToken = videoResp.data.nextPageToken;
-        videoResp = await api.get(
-          `playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=${pageSize}&pageToken=${nextPageToken}&playlistId=${uploadsId}&key=${apiKey}`
-        );
-        videos.push(...videoResp.data.items);
-      }
     }
-
+    
     videos = normalize.normalizeRecords(videos);
     videos = normalize.createGatsbyIds(videos, createNodeId);
     videos = await normalize.downloadThumbnails({
@@ -80,11 +69,11 @@ exports.sourceNodes = async (
   }
 
   try {
-    if(Array.isArray(channelId)) {
-      await Promise.all(channelId.map(async (channelIdEntry) => createVideoNodesFromChannelId(channelIdEntry, apiKey)));
+    if(Array.isArray(playlistId)) {
+      await Promise.all(playlistId.map(async (playlistIdEntry) => createVideoNodesFromPlaylistId(playlistIdEntry, apiKey)));
     }
     else {
-      await createVideoNodesFromChannelId(channelId, apiKey);
+      await createVideoNodesFromPlaylistId(playlistId, apiKey);
     }
     return;
   } catch (error) {
