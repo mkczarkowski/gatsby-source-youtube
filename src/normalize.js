@@ -56,10 +56,10 @@ exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
   Promise.all(
     items.map(async item => {
       let fileNode;
-      if (item.thumbnail && item.thumbnail.url) {
+      if (item.mqThumbnail && item.mqThumbnail.url) {
         try {
           fileNode = await createRemoteFileNode({
-            url: item.thumbnail.url,
+            url: item.mqThumbnail.url,
             store,
             cache,
             createNode
