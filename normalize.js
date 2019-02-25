@@ -64,7 +64,7 @@ exports.downloadThumbnails = function () {
                       case 0:
                         fileNode = void 0;
 
-                        if (!(item.thumbnail && item.thumbnail.url)) {
+                        if (!(item.mqThumbnail && item.mqThumbnail.url)) {
                           _context.next = 10;
                           break;
                         }
@@ -72,7 +72,7 @@ exports.downloadThumbnails = function () {
                         _context.prev = 2;
                         _context.next = 5;
                         return createRemoteFileNode({
-                          url: item.thumbnail.url,
+                          url: item.mqThumbnail.url,
                           store: store,
                           cache: cache,
                           createNode: createNode
