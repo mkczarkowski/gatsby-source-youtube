@@ -3,22 +3,18 @@ const { createRemoteFileNode } = require("gatsby-source-filesystem");
 const crypto = require("crypto");
 const polyfill = require("babel-polyfill");
 
-const digest = str =>
-  crypto
-    .createHash(`md5`)
-    .update(str)
-    .digest(`hex`);
+const digest = (str) => crypto.createHash(`md5`).update(str).digest(`hex`);
 
 exports.createGatsbyIds = (items, createNodeId) => {
-  return items.map(e => {
+  return items.map((e) => {
     e.originalID = e.id;
     e.id = createNodeId(e.id.toString());
     return e;
   });
 };
 
-exports.normalizeRecords = items => {
-  return (items || []).map(item => {
+exports.normalizeRecords = (items, playlist) => {
+  return (items || []).map((item) => {
     const e = {
       id: get(item, "id"),
       publishedAt: get(item, "snippet.publishedAt"),
@@ -28,6 +24,8 @@ exports.normalizeRecords = items => {
       privacyStatus: get(item, "status.privacyStatus"),
       channelId: get(item, "snippet.channelId"),
       channelTitle: get(item, "snippet.channelTitle"),
+      playlistId: playlist.id,
+      playlistTitle: playlist.snippet.title,
       thumbnail: get(
         item,
         "snippet.thumbnails.maxres",
@@ -45,7 +43,7 @@ exports.normalizeRecords = items => {
           )
         )
       ),
-      mqThumbnail: get(item, "snippet.thumbnails.medium")
+      mqThumbnail: get(item, "snippet.thumbnails.medium"),
     };
 
     return e;
@@ -54,7 +52,7 @@ exports.normalizeRecords = items => {
 
 exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
   Promise.all(
-    items.map(async item => {
+    items.map(async (item) => {
       let fileNode;
       if (item.mqThumbnail && item.mqThumbnail.url) {
         try {
@@ -62,7 +60,7 @@ exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
             url: item.mqThumbnail.url,
             store,
             cache,
-            createNode
+            createNode,
           });
         } catch (error) {
           // noop
@@ -78,7 +76,7 @@ exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
   );
 
 exports.createNodesFromEntities = (items, createNode) => {
-  items.forEach(e => {
+  items.forEach((e) => {
     let { ...entity } = e;
     let node = {
       ...entity,
@@ -86,8 +84,8 @@ exports.createNodesFromEntities = (items, createNode) => {
       children: [],
       internal: {
         type: "YoutubeVideo",
-        contentDigest: digest(JSON.stringify(entity))
-      }
+        contentDigest: digest(JSON.stringify(entity)),
+      },
     };
 
     createNode(node);
