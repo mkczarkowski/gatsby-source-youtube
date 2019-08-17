@@ -6,8 +6,9 @@ Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.o
 
 ## Install
 
-`npm install --save gatsby-source-youtube`
+Add to your package.json deps
 
+`"gatsby-source-youtube": "https://github.com/mkczarkowski/gatsby-source-youtube.git",`
 
 ## gatsby-config.js
 
@@ -16,7 +17,7 @@ plugins: [
   {
     resolve: `gatsby-source-youtube`,
     options: {
-      channelId: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA', 'UCK8sQmJBp8GCxrOtXWBpyXY'],
+      channelId: ['<< Array of Youtube channelIDs>>',
       apiKey: '<< Add your Youtube api key here>>',
       maxVideos: 50 // Defaults to 50
     },
@@ -95,3 +96,12 @@ Get videos from a specific channel:
 
 `channelTitle`
 : The title of the channel of the Youtube video
+
+`playlistId`
+: The playlist id of the Youtube video
+
+`playlistTitle`
+: The title of the playlist of the Youtube video
+
+`playlistSlug`
+: The slugified playlist title of the Youtube video
