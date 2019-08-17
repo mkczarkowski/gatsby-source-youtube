@@ -39,6 +39,7 @@ exports.normalizeRecords = function (items, playlist) {
       channelTitle: get(item, "snippet.channelTitle"),
       playlistId: playlist.id,
       playlistTitle: playlist.snippet.title,
+      playlistSlug: slugify(playlist.snippet.title),
       thumbnail: get(item, "snippet.thumbnails.maxres", get(item, "snippet.thumbnails.standard", get(item, "snippet.thumbnails.high", get(item, "snippet.thumbnails.medium", get(item, "snippet.thumbnails.default"))))),
       mqThumbnail: get(item, "snippet.thumbnails.medium")
     };
@@ -46,6 +47,10 @@ exports.normalizeRecords = function (items, playlist) {
     return e;
   });
 };
+
+function slugify(string) {
+  return string.toString().trim().toLowerCase().replace(/\s+/g, "-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-").replace(/^-+/, "").replace(/-+$/, "");
+}
 
 exports.downloadThumbnails = function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(_ref) {

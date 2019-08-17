@@ -26,6 +26,7 @@ exports.normalizeRecords = (items, playlist) => {
       channelTitle: get(item, "snippet.channelTitle"),
       playlistId: playlist.id,
       playlistTitle: playlist.snippet.title,
+      playlistSlug: slugify(playlist.snippet.title),
       thumbnail: get(
         item,
         "snippet.thumbnails.maxres",
@@ -49,6 +50,18 @@ exports.normalizeRecords = (items, playlist) => {
     return e;
   });
 };
+
+function slugify(string) {
+  return string
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
 
 exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
   Promise.all(
