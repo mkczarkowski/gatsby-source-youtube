@@ -36,7 +36,7 @@ exports.sourceNodes = async (
   const { createNode } = boundActionCreators;
   let api = getApi();
   const playlistResp = await api.get(
-    `playlists?part=snippet&channelId=${channelId}&key={apiKey}`
+    `playlists?part=snippet&channelId=${channelId}&key=${apiKey}`
   );
 
   const playlists = [...playlistResp.data.items];

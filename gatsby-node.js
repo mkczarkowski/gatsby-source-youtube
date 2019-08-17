@@ -57,7 +57,7 @@ exports.sourceNodes = function () {
             createNode = boundActionCreators.createNode;
             api = getApi();
             _context3.next = 4;
-            return api.get("playlists?part=snippet&channelId=" + channelId + "&key={apiKey}");
+            return api.get("playlists?part=snippet&channelId=" + channelId + "&key=" + apiKey);
 
           case 4:
             playlistResp = _context3.sent;
