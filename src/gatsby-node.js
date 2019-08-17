@@ -77,7 +77,7 @@ exports.sourceNodes = async (
   try {
     await Promise.all(
       playlists.map(async (playlist) =>
-        createVideoNodesFromPlaylistId(playlist, apiKey)
+        createVideoNodesFromPlaylist(playlist, apiKey)
       )
     );
     return;

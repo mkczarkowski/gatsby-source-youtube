@@ -142,7 +142,7 @@ exports.sourceNodes = function () {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
-                        return _context2.abrupt("return", createVideoNodesFromPlaylistId(playlist, apiKey));
+                        return _context2.abrupt("return", createVideoNodesFromPlaylist(playlist, apiKey));
 
                       case 1:
                       case "end":
